@@ -217,11 +217,10 @@ display:
     rss: true                         # RSS 订阅区域（true=显示并分析, false=隐藏并跳过分析）
     standalone: false                 # 独立展示区：完整热榜/RSS，不受关键词过滤（true=显示, false=隐藏）
     ai_analysis: false                 # AI 分析区域（true=显示, false=隐藏）
-
+  standalone: {}
   # 独立展示区：将指定平台/RSS 完整展示，不受关键词过滤
   # 推送展示由 regions.standalone 控制，AI 分析由 ai_analysis.include_standalone 控制
-    standalone: {}
-
+  
 # ===============================================================
 # 6. 推送通知
 #
@@ -459,11 +458,11 @@ advanced:
 
   # 以下为内部参数（一般无需修改）
   # 消息分批大小（字节）- 内部配置，请勿修改
-batch_size:
-  默认: 4000
-  dingtalk: 20000
-  feishu: 30000
-  bark: 4000
-  slack: 4000
-batch_send_interval: 3              # 批次发送间隔（秒）
-feishu_message_separator: "━━━━━━━━━━━━━━━━"
+  batch_size:
+    default: 4000      # 使用英文键名 default，而不是中文“默认”
+    dingtalk: 20000
+    feishu: 30000
+    bark: 4000
+    slack: 4000
+  batch_send_interval: 3
+  feishu_message_separator: "━━━━━━━━━━━━━━━━"
