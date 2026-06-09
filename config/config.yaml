@@ -153,13 +153,18 @@ rss:
 # 4. 报告模式
 # ===============================================================
 report:
-  mode: "current"                     # 报告模式（开启 schedule 后作为默认值，会被 timeline 时段覆盖）
+  mode: "incremental"                 # 报告模式（开启 schedule 后作为默认值，会被 timeline 时段覆盖）
                                       # daily = 当日汇总，按时推送当天所有匹配新闻（会包含之前推过的）
                                       # current = 当前榜单，按时推送当前在榜的匹配新闻（持续在榜的每次都出现）
                                       # incremental = 增量监控，只推送新增内容，零重复（没有新增时不推送）
 
   display_mode: "keyword"             # 分组维度
-                                      # keyword = 按关键词分组显示
+     region_order:
+    - "hot_news"                   # 热榜新闻
+    - "rss"                        # RSS订阅（可选）
+    - "ai_analysis"                # AI分析（可选）
+  rss_enabled: false               # 暂不启用RSS
+  ai_analysis_enabled: false       # 暂不启用AI分析                                 # keyword = 按关键词分组显示
                                       # platform = 按平台/来源分组显示
 
   sort_by_position_first: false       # 关键词模式排序（仅 display_mode=keyword 时生效）
@@ -168,15 +173,76 @@ report:
 
   rank_threshold: 5                   # 排名高亮阈值（影响展示强调，不改变抓取范围）
 
-  max_news_per_keyword: 0             # 每个关键词/标签最大显示数量（0=不限制，仅影响展示裁剪）
-
+  max_news_per_keyword: 8             # 每个关键词/标签最大显示数量（0=不限制，仅影响展示裁剪）
+  ax_total_news: 50                    # 全部分组累计最多50条
 
 # ===============================================================
 # 4.5 筛选策略
 # ===============================================================
 filter:
   method: "keyword"                     # 筛选方式（二选一）
-                                       # keyword = 关键词匹配，不调用 AI，不消耗 token，但规则固定
+   # ===== 重点关注赛道（高优先级，每日推送） =====
+# 低空经济
+低空经济
++低空 +经济
++无人机 +物流
+!营销 !广告
+
+# 固态电池
+固态电池
++固态 +电池
++硫化物 +固态
++全固态 +量产
+!招聘
+
+# 具身智能 / 人形机器人
+具身智能
++具身 +智能
++人形 +机器人
++机器人 +量产
+!营销
+
+# AI Agent
+AI Agent
++AI +Agent
++智能体 +企业
+!广告
+
+# 商业航天
+商业航天@8
++商业 +航天
++可复用 +火箭
+!营销
+
+# ===== 次重点关注赛道（中优先级，限制推送数量） =====
+# 量子计算
+量子计算@5
++量子 +计算
++量子 +比特
++国盾 +量子
+!广告
+
+# 6G通信
+6G@5
++6G +通信
++6G +标准
++太赫兹
+!营销
+
+# 脑机接口
+脑机接口@3
++脑机 +接口
++Neuralink
++BCI
+!广告
+
+# 可控核聚变
+可控核聚变@3
++核聚变
++EAST
++人造太阳
++聚变 +能源
+!营销                                    # keyword = 关键词匹配，不调用 AI，不消耗 token，但规则固定
                                        #           词组定义在 config/frequency_words.txt
                                        # ai = AI 智能分类，更灵活但每次运行消耗 token
                                        #      兴趣描述在 config/ai_interests.txt，需配合下方 ai_filter
@@ -282,7 +348,7 @@ notification:
     email:
       from: ""                        # 发件人邮箱地址
       password: ""                    # 发件人邮箱密码或授权码
-      to: ""                          # 收件人邮箱，多个用逗号分隔
+      到: ""                          # 收件人邮箱，多个用逗号分隔
       smtp_server: ""                 # SMTP 服务器（可选，留空自动识别）
       smtp_port: ""                   # SMTP 端口（可选，留空自动识别）
 
